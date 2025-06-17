@@ -29,7 +29,6 @@ services:
     env_file:
       - .env
     restart: unless-stopped
-    entrypoint: ["/app/entrypoint.sh"]
 
 volumes:
   postgres_data:
