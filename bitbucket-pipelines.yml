@@ -1,0 +1,31 @@
+#  Template python-build
+
+#  This template allows you to validate your python code.
+#  The workflow allows running tests and code linting on the default branch.
+
+image: python:3.11
+
+pipelines:
+  default:
+    - parallel:
+        - step:
+            name: Test
+            caches:
+              - pip
+            script:
+              - pip install -r requirements.txt
+              - pip install pytest
+              - pytest -v tests/* --junitxml=test-reports/report.xml
+        - step:
+            name: Lint code
+            script:
+              - pip install flake8
+              - flake8 . --extend-exclude=dist,build --show-source --statistics
+
+  branches:
+    main:
+      - step:
+          name: Deploy to Render
+          image: curlimages/curl:latest
+          script:
+            - 'curl -X POST -H "Authorization: Bearer $RENDER_API_KEY" -H "Content-Type: application/json" https://api.render.com/deploy/srv-d092u615pdvs73a2a9l0'
