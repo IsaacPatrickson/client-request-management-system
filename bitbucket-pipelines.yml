@@ -21,11 +21,3 @@ pipelines:
             script:
               - pip install flake8
               - flake8 . --extend-exclude=dist,build --show-source --statistics
-
-  branches:
-    main:
-      - step:
-          name: Deploy to Render
-          image: curlimages/curl:latest
-          script:
-            - 'curl -X POST -H "Authorization: Bearer $RENDER_API_KEY" -H "Content-Type: application/json" https://api.render.com/deploy/srv-d092u615pdvs73a2a9l0'
