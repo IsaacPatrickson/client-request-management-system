@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import FormView, TemplateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -26,9 +26,14 @@ class CustomLoginView(LoginView):
     template_name = 'registration/login.html'
 
     def get_success_url(self):
+        # First, check if there's a 'next' parameter (automatically handled by get_redirect_url)
+        redirect_to = self.get_redirect_url()
+        if redirect_to:
+            return redirect_to
+        
         user = self.request.user
         if user.is_staff or user.is_superuser:
-            return reverse_lazy('admin-dashboard')
+            return reverse('admin:index')
         return reverse_lazy('user-dashboard')
 
 # Regular user dashboard (must be logged in)

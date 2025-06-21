@@ -40,8 +40,8 @@ def test_admin_user_redirects_to_admin_dashboard(client):
 
     # Assert redirect response status code 302
     assert response.status_code == 302
-    # Assert redirect location is the admin dashboard URL
-    assert response.url == reverse('admin-dashboard')    
+    # Assert redirect location is the django admin dashboard URL
+    assert response.url == '/admin/'    
     
 @pytest.mark.django_db
 def test_admin_user_redirects_to_admin_dashboard(client):
@@ -62,8 +62,8 @@ def test_admin_user_redirects_to_admin_dashboard(client):
 
     # Assert redirect response status code 302
     assert response.status_code == 302
-    # Assert redirect location is the admin dashboard URL
-    assert response.url == reverse('admin-dashboard')    
+    # Assert redirect location is the django admin dashboard URL
+    assert response.url == '/admin/'    
     
     
     

@@ -16,8 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
+from main.views import CustomLoginView
+
+# Redirect /admin/login/ to /login/
+def redirect_admin_login(request):
+    return redirect('/login/')
 
 urlpatterns = [
+    # Redirect admin login to your custom login page
+    path('admin/login/', redirect_admin_login),
+
+    # Custom login
+    path('login/', CustomLoginView.as_view(), name='login'),
+
+    # Your app URLs
+    path('', include('main.urls')),
+
+    # Admin dashboard (this must be last for the override to work)
     path('admin/', admin.site.urls),
-    path('', include('main.urls')),  # Include your app URLs here
 ]
