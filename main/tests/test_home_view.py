@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 
+# For TDD - Testing the homepage loads for anonymous users
 @pytest.mark.django_db
 def test_home_view_renders(client):
     url = reverse('home')

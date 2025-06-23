@@ -1,7 +1,10 @@
-from django.contrib.admin.views.decorators import staff_member_required
 from django.core.exceptions import PermissionDenied
 from functools import wraps
 
+# staff_member_required_403 decorator ensures:
+# - Only authenticated staff users can access the admin views
+# - Unauthenticated users get redirected to login
+# - Authenticated non-staff users get HTTP 403 Forbidden instead of redirect
 def staff_member_required_403(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):

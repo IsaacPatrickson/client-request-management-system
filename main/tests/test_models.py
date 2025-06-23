@@ -3,6 +3,8 @@ from django.utils.timezone import make_aware
 from datetime import datetime
 from main.models import Client, ClientRequest, RequestType  # Adjust the import path if needed
 
+# For TDD - Creating the models
+
 # Test creating a Client instance with valid data
 @pytest.mark.django_db
 def test_create_client_with_valid_data():

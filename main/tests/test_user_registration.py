@@ -30,7 +30,7 @@ def test_user_registration_form_valid():
     assert user.username == 'newuser'
     assert user.email == 'newuser@example.com'
     assert user.check_password('strongpassword123')
-    
+      
 # Test that the form correctly rejects submissions where passwords do not match
 @pytest.mark.django_db
 def test_form_password_mismatch():

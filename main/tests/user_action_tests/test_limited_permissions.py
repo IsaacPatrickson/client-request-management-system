@@ -1,12 +1,11 @@
 import pytest
 from django.urls import reverse
-from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from main.models import Client
 from main.utils.permissions import create_limited_users_permission_group
 
 @pytest.mark.django_db
-def test_limited_user_permissions(client, django_user_model):
+def test_limited_user_CRUD_permissions(client, django_user_model):
     # Set up permissions and user
     group = create_limited_users_permission_group()
     user = django_user_model.objects.create_user(username='limited', password='secure123', is_staff=True)
@@ -49,52 +48,26 @@ def test_limited_user_permissions(client, django_user_model):
     delete_url = reverse('admin:main_client_delete', args=[client_obj.pk])
     response = client.get(delete_url)
     assert response.status_code == 403
+    
+models = ['client', 'requesttype', 'clientrequest']
+actions = ['view', 'add', 'change']
 
 @pytest.mark.django_db
-def test_limited_user_permissions():
+def test_limited_user_permissions_check():
     # Assuming your create_limited_users_permission_group function is imported and available
     group = create_limited_users_permission_group()
-
     # Check group has the correct permissions for models
     expected_models = ['client', 'requesttype', 'clientrequest']
     expected_actions = ['view', 'add', 'change']
 
     for model in expected_models:
         content_type = ContentType.objects.get(app_label='main', model=model)
-        
         # Check for view/add/change permissions
         for action in expected_actions:
             codename = f"{action}_{model}"
             perm = group.permissions.filter(content_type=content_type, codename=codename)
             assert perm.exists(), f"Group missing permission: {codename}"
-
         # Check that delete permission is NOT present
         delete_codename = f"delete_{model}"
         delete_perm = group.permissions.filter(content_type=content_type, codename=delete_codename)
         assert not delete_perm.exists(), f"Group should NOT have permission: {delete_codename}"
-
-@pytest.mark.django_db
-def test_limited_user_cannot_delete(client):
-    # Setup user and assign to LimitedUsers group
-    group = create_limited_users_permission_group()
-    user = User.objects.create_user(username='limitedadmin', password='testpass')
-    user.groups.add(group)
-    user.save()
-
-    # Log in as limited admin user
-    client.login(username='limitedadmin', password='testpass')
-
-    # Pick a model and try to delete an object through admin or API
-    # For example, try deleting a Client object via admin panel
-    # Create an instance to attempt deletion
-    from main.models import Client
-    client_instance = Client.objects.create(name='Test Client', email='test@example.com')
-
-    # Attempt to delete client via Django admin URL
-    # The admin delete URL for Client typically looks like:
-    # /admin/main/client/<id>/delete/
-    delete_url = reverse('admin:main_client_delete', args=[client_instance.pk])
-    response = client.get(delete_url)
-
-    # The user should get forbidden or redirect to login (usually 403 or 302)
-    assert response.status_code in (302, 403), "Limited admin should not access delete page"

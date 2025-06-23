@@ -4,7 +4,7 @@ from main.utils.permissions import create_limited_users_permission_group
 from main.utils.seed_users import seed_example_users 
 
 # Seeding is usually considered setup or fixture logic, not core app logic.
-# Instead write tests that assume seeded data exists.
+# However this was for TDD and I wanted to check the data was seeding for this one case
 
 @pytest.mark.django_db
 def test_seeded_users_exist():

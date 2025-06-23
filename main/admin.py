@@ -4,15 +4,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.contrib.admin import AdminSite
 from .decorators import staff_member_required_403
+from django.utils import timezone
 
 class CustomAdminSite(AdminSite):
     # Overrides the admin_view method to customize permission checks and caching behavior
     def admin_view(self, view, cacheable=False):
-        # Wraps the original admin view with your custom staff_member_required_403 decorator
-        # This ensures:
-        # - Only authenticated staff users can access the admin views
-        # - Unauthenticated users get redirected to login
-        # - Authenticated non-staff users get HTTP 403 Forbidden instead of redirect
+        # Wraps the original admin view with your custom decorator
         view = staff_member_required_403(view)
         # If the view should not be cached, wraps it with Django's never_cache decorator
         # to prevent browsers and proxies from caching sensitive admin pages
@@ -28,7 +25,7 @@ custom_admin_site = CustomAdminSite(name='custom_admin')
 class ClientRequestInline(admin.TabularInline):
     model = ClientRequest
     extra = 1
-    fields = ('request_type', 'status', 'created_at')
+    fields = ('request_type', 'status', 'description', 'created_at')
     readonly_fields = ('created_at',)
     show_change_link = True
        
@@ -49,6 +46,8 @@ class ClientAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
         }),
     )
+    
+    inlines = [ClientRequestInline]
 
 custom_admin_site.register(Client, ClientAdmin)
 
@@ -59,18 +58,29 @@ class RequestTypeAdmin(admin.ModelAdmin):
     ordering = ('name',)
     fieldsets = (
         (None, {
-            'fields': ('id', 'name')
+            'fields': ('name',)
         }),
         ('Description', {
             'fields': ('description',),
             'classes': ('collapse',),
         }),
     )
+    
 custom_admin_site.register(RequestType, RequestTypeAdmin)
+
+def make_status_action(status_value):
+    def action(modeladmin, request, queryset):
+        now = timezone.now()
+        updated_count = queryset.update(status=status_value, updated_at=now)
+        modeladmin.message_user(request, f'{updated_count} requests marked as {status_value}.')
+    action.__name__ = f'mark_as_{status_value.lower().replace(" ", "_")}'
+    action.short_description = f'Mark selected requests as {status_value}'
+    return action
+
 
 # Register Client Request Type table(model)
 class ClientRequestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'client', 'request_type', 'status', 'description','created_at', 'updated_at')
+    list_display = ('id', 'client_name', 'request_type_name', 'status', 'description','created_at', 'updated_at')
     list_filter = ('status', 'created_at')
     search_fields = ('client__name', 'request_type__name')
     readonly_fields = ('created_at', 'updated_at')
@@ -88,16 +98,34 @@ class ClientRequestAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
         }),
     )
-    actions = ['mark_as_completed']
 
-    def mark_as_completed(self, request, queryset):
-        updated_count = queryset.update(status='Completed')
-        self.message_user(request, f'{updated_count} requests marked as completed.')
-    mark_as_completed.short_description = 'Mark selected requests as completed'
+    def make_status_action(status_value):
+        def action(modeladmin, request, queryset):
+            now = timezone.now()
+            updated_count = queryset.update(status=status_value, updated_at=now)
+            modeladmin.message_user(request, f'{updated_count} requests marked as {status_value}.')
+        action.__name__ = f'mark_as_{status_value.lower().replace(" ", "_")}'
+        action.short_description = f'Mark selected requests a {status_value}'
+        return action
+    
+    actions = [
+        make_status_action('Pending'),
+        make_status_action('In Progress'),
+        make_status_action('Completed'),
+    ]
+    
+    def client_name(self, obj):
+        return obj.client.name
+    client_name.short_description = 'Client'
+    
+    def request_type_name(self, obj):
+        return obj.request_type.name
+    request_type_name.short_description = 'Request Type'
+    
+
 custom_admin_site.register(ClientRequest, ClientRequestAdmin)
 
 class UsersAdmin(DefaultUserAdmin):
     # Inherit Django's built-in UserAdmin to get all user admin features.
-    # You can override list_display or other attributes if desired.
     pass
 custom_admin_site.register(User, UsersAdmin)
