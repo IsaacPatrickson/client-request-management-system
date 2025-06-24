@@ -14,8 +14,8 @@ pipelines:
         caches:
           - pip
         script:
-          - pip install -r requirements.txt
-          - pip install psycopg[binary] pytest pytest-django
+          - apt-get update && apt-get install -y netcat
+          - pip install -r requirements.txt psycopg[binary] pytest pytest-django
           - chmod +x wait-for-db.sh
           - ./wait-for-db.sh
           - python manage.py migrate --noinput
@@ -31,4 +31,5 @@ definitions:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: password
         POSTGRES_DB: postgres
+
 
