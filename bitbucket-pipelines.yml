@@ -14,6 +14,7 @@ pipelines:
         caches:
           - pip
         script:
+          - echo $DATABASE_URL
           - pip install -r requirements.txt
           - pip install pytest psycopg[binary] pytest-django
           - python manage.py migrate --noinput
