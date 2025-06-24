@@ -15,6 +15,7 @@ pipelines:
           - pip
         script:
           - apt-get update && apt-get install -y netcat-openbsd
+          - export DATABASE_URL=postgres://postgres:password@localhost:5432/postgres
           - pip install -r requirements.txt psycopg[binary] pytest pytest-django
           - chmod +x wait-for-db.sh
           - ./wait-for-db.sh
