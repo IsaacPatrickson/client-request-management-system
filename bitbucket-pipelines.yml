@@ -16,6 +16,7 @@ pipelines:
         script:
           - pip install -r requirements.txt
           - pip install psycopg[binary] pytest pytest-django
+          - chmod +x wait-for-db.sh
           - ./wait-for-db.sh
           - python manage.py migrate --noinput
           - pytest -v main/tests --junitxml=test-reports/report.xml
