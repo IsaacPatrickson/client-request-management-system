@@ -17,3 +17,12 @@ pipelines:
           - pytest -v main/tests --junitxml=test-reports/report.xml
         artifacts:
           - test-reports/**
+
+definitions:
+  services:
+    postgres:
+      image: postgres:13
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: postgres
