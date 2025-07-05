@@ -1,28 +1,31 @@
 # Use official Python image
 FROM python:3.11
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
+# Set work directory
 WORKDIR /app
 
-# Install Python deps
+# Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
+# Copy project files
 COPY . .
 
-# Pre‑create dir for WhiteNoise
-RUN mkdir -p /app/staticfiles
-
-# Collect static files *at build time*
-RUN python manage.py collectstatic --noinput
-
-# Ensure entrypoint scripts are executable
-RUN chmod +x /app/entrypoint.sh /app/render-predeploy.sh
-
+# Expose the port Django will use
 EXPOSE 8000
 
-# Start the app
+# Copy entrypoint script and make sure it is executable
+COPY entrypoint.sh /app/entrypoint.sh
+COPY render-predeploy.sh /app/render-predeploy.sh
+RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/render-predeploy.sh
+
+# Pre-create the staticfiles directory to suppress the warning
+RUN mkdir -p /app/staticfiles
+
+# Use entrypoint to start the server
 CMD ["/app/entrypoint.sh"]
