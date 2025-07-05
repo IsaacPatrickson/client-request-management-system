@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Responsive design meta tag for mobile compatibility -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Link to the main CSS file using Django's static tag -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+    <title>Login</title>
+</head>
+<body>
+    <!-- ===============================================================
+         Background SVG graphics — animated via JavaScript (main.js)
+         ============================================================== -->
+    <div class="background-svg">
+        <svg id="pieces" class="section1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMinYMin meet">
+            <defs>
+                <!-- Gradient definitions used to fill the animated polygons -->
+                <linearGradient id="fill1">
+                    <stop class="stop1" offset="0%"></stop>
+                    <stop class="stop2" offset="100%"></stop>
+                </linearGradient>
+                <linearGradient id="fill2">
+                    <stop class="stop1" offset="0%"></stop>
+                    <stop class="stop2" offset="100%"></stop>
+                </linearGradient>
+            </defs>
+            
+            <!-- Empty polygon shapes to be animated by JS -->
+            <polygon id="path1" points="" fill="url(#fill1)"></polygon>
+            <polygon id="path2" points="" fill="url(#fill2)"></polygon>
+        </svg>
+    </div>
+
+    <!-- ===============================================================
+         Foreground content (centered card with navigation buttons)
+         ============================================================== -->
+    <div class="content-wrapper">
+        <div id="login-container" class="center-container">
+            <!-- Company logo -->
+            <img src="{% static 'images/MW-Logo-Dark-Blue@2x.png' %}" alt="logo">
+
+            <!-- Login title and messages -->
+            <h1>Login</h1>
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Login form -->
+            <form method="post" class="login-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-submit">Log in</button>
+            </form>
+
+            <!-- Navigation buttons -->
+            <div class="navigation-buttons">
+                <a href="{% url 'home' %}" class="btn btn-standard">Return to home</a>
+                <p>Don't have an account?</p>
+                <a href="{% url 'register' %}" class="btn btn-standard">Register Here!</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (required by some scripts or optional for animations/plugins) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Custom JavaScript to animate background polygons -->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

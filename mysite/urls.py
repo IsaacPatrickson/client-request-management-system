@@ -14,10 +14,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
+
+# Redirect /admin/login/ to your custom login page
+def redirect_admin_login(request):
+    return redirect('/login/')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('main.urls')),  # Include your app URLs here
+    # Redirect non-staff users hitting admin login
+    path('admin/login/', redirect_admin_login),
+
+    # App-specific URLs
+    path('', include('main.urls')),
 ]

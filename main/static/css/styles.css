@@ -1,0 +1,315 @@
+/* ---------- Resets / Globals -------------------------------------------- */
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: Poppins-Regular, sans-serif;
+}
+
+body {
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+
+/* ---------- Decorative SVG background ----------------------------------- */
+
+svg {
+    position: absolute;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+}
+
+.background-svg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.background-svg svg {
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: multiply;
+}
+
+#path1, #path2 {
+    mix-blend-mode: multiply;
+}
+
+#path2 {
+    opacity: .7;
+}
+
+.section1 #fill1 .stop1 {
+    stop-color: #5bc0ff	;
+}
+
+.section1 #fill1 .stop2 {
+    stop-color: #6d3a83;
+}
+
+.section1 #fill2 .stop1 {
+    stop-color: #3a9bdc;
+}
+
+.section1 #fill2 .stop2 {
+    stop-color: #3c215d;
+}
+
+
+/* ---------- Layout wrappers --------------------------------------------- */
+
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.center-container {
+    width: 90%;
+    max-width: 390px;
+    height: fit-content;
+    min-height: 450px;
+    margin: auto;
+    margin-top: 15vh;
+    background-color: white;
+    border-radius: 10px;
+    padding: 77px 15px 33px 15px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.center-container img {
+    width: 100%;
+    max-width: 360px;
+    object-fit: contain;
+}
+
+.center-container h1 {
+    font-size: 28px;
+}
+
+.center-container .messages {
+    margin: 10px 0;
+}
+
+.center-container .messages .alert-success {
+    border: 2px solid limegreen;
+    padding: 2px;
+    margin-bottom: 2px;
+}
+
+
+/* ---------- Buttons ------------------------------------------------------ */
+
+.center-container .btn {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
+    font-size: 16px;
+    line-height: 1.2;
+    padding: 0 20px;    
+    border-radius: 30px;
+    height: 50px;
+}
+
+.center-container .btn-standard {
+    background-color: #000f26;
+    color: #fff;
+    width: 100%;
+}
+
+.center-container .btn-standard:hover {
+    background-color: #3a9bdc;
+}
+
+
+/* ---------- Home section ------------------------------------------------- */
+
+#home-container img {
+    padding-bottom: 40px;
+}
+
+#home-container h1 {
+    padding-bottom: 30px;
+}
+
+#home-container .navigation-buttons {
+    flex: 2;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 5%;
+}
+
+
+/* ---------- Login & Register sections ----------------------------------- */
+
+#login-container img {
+    padding-bottom: 20px;
+}
+
+#login-container h1 {
+    padding-bottom: 10px;
+}
+
+#login-container .login-form {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+#login-container .login-form p {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+}
+
+#login-container .login-form .btn-submit {
+    background-color: #6d3a83;
+    color: #fff;
+    align-self: center;
+    border: 0;
+}
+
+#login-container .login-form .btn-submit:hover {
+    background-color: #e961e9;
+}
+
+#login-container .navigation-buttons {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+}
+
+
+/* --- Register‑specific tweaks ------------------------------------------- */
+
+#register-container img {
+    padding-bottom: 20px;
+}
+
+#register-container h1 {
+    padding-bottom: 10px;
+}
+
+#register-container .register-form {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+#register-container .register-form .errorlist {
+    list-style-type: none;
+    width: 100%;
+}
+
+#register-container .register-form .errorlist li {
+    padding: 2px;
+    border: 2px solid red;
+}
+
+#register-container .register-form p {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative; 
+    text-align: left;
+}
+
+#register-container .register-form p .helptext {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    display: flex;
+    width: 200px;
+    background-color: white;
+    border: 2px solid #3a9bdc;
+    transform: translate(-50%, -50%);
+    padding: 3px;
+    transition: all 1000ms;
+}
+
+#register-container .register-form p:hover .helptext {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+}
+
+#register-container .register-form .btn-submit {
+    background-color: #6d3a83;
+    color: #fff;
+    align-self: center;
+    border: 0;
+}
+
+#register-container .register-form .btn-submit:hover {
+    background-color: #e961e9;
+}
+
+#register-container .navigation-buttons {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+}
+
+
+/* ---------- Responsive tweaks ------------------------------------------- */
+
+@media (min-width: 768px) {
+    #register-container .register-form p .helptext {
+        top: 50%;
+        left: 110%;
+        transform: translate(0, -50%);
+    }
+}
+
+@media (min-width: 576px) {
+    .center-container {
+        max-width: 390px;
+    }
+
+    .center-container img {
+        max-width: 280px;
+    }
+}

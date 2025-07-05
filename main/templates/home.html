@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Responsive design meta tag for mobile compatibility -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Link to the main CSS file using Django's static tag -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+    <title>Home</title>
+</head>
+<body>
+    <!-- ===============================================================
+         Background SVG graphics — animated via JavaScript (main.js)
+         ============================================================== -->
+    <div class="background-svg">
+        <svg id="pieces" class="section1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMinYMin meet">
+            <defs>
+                <!-- Gradient definitions used to fill the animated polygons -->
+                <linearGradient id="fill1">
+                    <stop class="stop1" offset="0%"></stop>
+                    <stop class="stop2" offset="100%"></stop>
+                </linearGradient>
+                <linearGradient id="fill2">
+                    <stop class="stop1" offset="0%"></stop>
+                    <stop class="stop2" offset="100%"></stop>
+                </linearGradient>
+            </defs>
+
+            <!-- Empty polygon shapes to be animated by JS -->
+            <polygon id="path1" points="" fill="url(#fill1)"></polygon>
+            <polygon id="path2" points="" fill="url(#fill2)"></polygon>
+        </svg>
+    </div>
+
+    <!-- ===============================================================
+         Foreground content (centered card with navigation buttons)
+         ============================================================== -->
+    <div class="content-wrapper">
+        <div id="home-container" class="center-container">
+            
+            <!-- Company logo -->
+            <img src="{% static 'images/MW-Logo-Dark-Blue@2x.png' %}" alt="logo">
+
+            <!-- Welcome message -->
+            <h1>Welcome to the CRMS!</h1>
+
+            <!-- Navigation buttons -->
+            <div class="navigation-buttons">
+                <!-- Link to login page (Django URL tag) -->
+                <a href="{% url 'login' %}" class="btn btn-standard">Login</a>
+                
+                <!-- Link to registration page -->
+                <a href="{% url 'register' %}" class="btn btn-standard">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================================================
+         Scripts (loaded last for performance)
+         ============================================================== -->
+
+    <!-- jQuery (required by some scripts or optional for animations/plugins) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Custom JavaScript to animate background polygons -->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
