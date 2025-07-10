@@ -15,7 +15,7 @@ A Django-based Client Request Management System (CRMS) with Docker development e
 - [Management Commands](#management-commands)  
 - [Testing](#testing)  
 - [Deployment](#deployment)  
-- [User Manual]{#user-manual}
+- [User Manual](#user-manual)
 
 ---
 
