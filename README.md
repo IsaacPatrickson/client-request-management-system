@@ -15,6 +15,7 @@ A Django-based Client Request Management System (CRMS) with Docker development e
 - [Management Commands](#management-commands)  
 - [Testing](#testing)  
 - [Deployment](#deployment)  
+- [User Manual]{#user-manual}
 
 ---
 
@@ -167,29 +168,29 @@ python manage.py collectstatic --noinput
 
 Assistive screenshots are in the Appendicies of Isaac Patrickson's Final submission point: Software Engineering and Agile end-of-module assessment
 
-### Register Journey
+### Register Journey (Appendix D)
 1. On the homepage, the user presses the register button.
 2. The user enters their details which match the requirements for each field and presses the register button.
 3. The fields are wiped and a success message is displayed showing the user they have successfully registered.
 
 See the limited permissions user login journey to continue to the dashboard.
 
-### Limited User Login Journey
+### Limited User Login Journey (Appendix E)
 1. On the homepage, the user presses the login button.
 2. The user is taken to the login page. Valid limited user credentials are entered and the user logs in.
 3. The limited user is greeted with the dashboard screen which shows a limited list of tables and a list of recent changes made by the user.
 
-### Admin User Login Journey
+### Admin User Login Journey (Appendix G)
 1. On the homepage, the user presses the login button.
 2. The user is taken to the login page. Valid admin credentials are entered and the user logs in.
 3. The admin user is greeted with the dashboard screen which shows all tables and a list of recent changes made by the user.
 
-### Logout Journey
+### Logout Journey (Appendix H)
 1. Once in the dashboard, any user can logout by pressing the logout button.
 2. Once the logout button is pressed, the user is presented with a success message confirming that they have successfully logged out. They are given the option to return to the login page.
 3. Upon clicking the button to log in again, the user is taken to the custom login page.
 
-### Create, Read, Update and Delete Actions
+### Create, Read, Update and Delete Actions (Appendix E; Appendix G)
 1. An admin/limited user has pressed the Client Requests button to view the client requests table (READ).
 2. An admin/limited user has pressed the add button to add a new client request (CREATE).
 3. An admin/limited user has clicked on the id of a record and they are taken to the view for changing the details of a client request (UPDATE).
