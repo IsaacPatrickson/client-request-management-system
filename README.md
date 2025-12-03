@@ -1,197 +1,285 @@
-# Software Engineering and Agile web application - Client Request Tracker
+#  **Client Request Tracker**
 
-A Django-based Client Request Management System (CRMS) with Docker development environment and production hosting on Render.
+### Django • Docker • PostgreSQL • Render • Agile • TDD
 
----
+A full-stack **Client Request Management System (CRMS)** built with **Django**, **Docker**, and **PostgreSQL**, designed to help technical teams track client requests with clear visibility across clients, request types, and statuses.
 
-## Table of Contents
+This project was created as part of an Agile, Sprint-based workflow and demonstrates practical use of:
 
-- [Project Overview](#project-overview)  
-- [Features](#features)  
-- [Prerequisites](#prerequisites)
-- [Using the Makefile](#docker--django-management-with-makefile)
-- [Makefile Commands](#available-makefile-commands)
-- [Setup & Development](#setup--development)  
-- [Management Commands](#management-commands)  
-- [Testing](#testing)  
-- [Deployment](#deployment)  
-- [User Manual](#user-manual)
+* Django models, admin customisation, and auth
+* Role-based permissions (admin vs limited users)
+* Dockerised local development
+* PostgreSQL in production (Render)
+* Automated testing with pytest + pytest-django
+* Custom management commands
+* Deployment workflow on Render
+* Technical documentation and system design
+* Scrum practices, Jira sprint boards & Agile diaries
 
----
-
-## Project Overview
-
-SEA-web-app is a Django application designed to manage client requests efficiently. The app uses Docker for local development to ensure consistency across environments and is deployed to Render for production hosting.
+📄 Full technical write-up (architecture, Agile analysis, sprint boards, TDD rationale) is located in:
+**`/docs/Client_Request_Tracker_WriteUp.docx`** 
 
 ---
 
-## Features
+# 📌 **Project Overview**
 
-- User authentication and authorization with custom user groups  
-- Client, Request Type, and Client Request management via Django admin  
-- Custom permission groups for fine-grained access control  
-- Inline editing of related models in the admin interface  
-- Dockerized development environment for easy setup  
-- Management commands for seeding example data and wiping the database  
+The Client Request Tracker is a lightweight web application built to solve a real problem: **client requests were being missed due to poor visibility and inconsistent tracking**.
+
+This system provides:
+
+* A dashboard for managing clients, request types, and client requests
+* Inline viewing of related request records
+* Role-based access:
+
+  * **Admins** → full CRUD
+  * **Limited users** → create, read, update (but no deletion)
+* A clean login and registration interface
+* A secure, scalable deployment pipeline through Docker → Render
+
+This project was developed using **Scrum**, divided into epics and user stories, with documented sprint boards, Agile diary entries and TDD cycles included in the write-up.
 
 ---
 
-## Prerequisites
+# ✨ **Key Features**
 
-- Docker & Docker Compose installed  
-- Python 3.11+ (if running outside Docker)  
-- Render account for production deployment  
+### 🔐 Authentication & Permissions
+
+* Custom user roles (Admin, Limited User)
+* Limited users can manage requests but **cannot delete**
+* Newly registered users default to limited permissions
+* Account-disabled redirection for non-staff roles
+
+### 📁 Request Tracking
+
+* Manage:
+
+  * Clients
+  * Request Types
+  * Client Requests
+* Inline related objects within the Django admin UI
+* Status flow: **Pending → In Progress → Completed**
+
+### 🛠 Developer Experience
+
+* **Full Docker environment**
+* **Makefile** to streamline commands
+* **Automated test suite** (pytest + coverage)
+* **Management commands**: seeding, wiping data
+
+### ☁️ Deployment
+
+* Hosted on **Render**
+* PostgreSQL production database
+* Static files via WhiteNoise
+* Gunicorn as WSGI server
 
 ---
 
-## Docker & Django Management with Makefile
+# 📂 **Project Structure**
 
-To simplify running common Docker and Django commands, this project includes a `Makefile` with predefined targets. This allows you to execute complex commands easily by running:
+```
+Client-Request-Tracker/
+│
+├── main/                  # Django app
+├── tests/                 # pytest test suite
+├── docker/                # Docker config files
+├── docs/
+│    └── Client_Request_Tracker_WriteUp.docx
+├── manage.py
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+# 🐳 **Docker & Makefile Workflow**
+
+This project includes a Makefile so you can manage Django + Docker without long commands:
 
 ```bash
 make <command>
 ```
 
-## Available Makefile Commands
+### Common Commands
 
-| Command           | Description                                      |
-|-------------------|--------------------------------------------------|
-| `make build`        | Build the Docker containers                      |
-| `make up`           | Start the Docker containers in detached mode    |
-| `make down`         | Stop and remove the Docker containers            |
-| `make makemigrations` | Create new Django migrations                     |
-| `make migrate`      | Apply Django database migrations                 |
-| `exampledata`       | Seed users and example data                      |
-| `make test`         | Run tests inside the Docker container using pytest |
-| `make coverage`     | Run tests with coverage report                    |
-| `make collectstatic`| Collect static files for production               |
-| `make flush`        | Flush the database (delete all data)             |
-| `make shell`        | Open a Django shell inside the Docker container  |
+| Command               | Description                     |
+| --------------------- | ------------------------------- |
+| `make build`          | Build Docker containers         |
+| `make up`             | Start containers                |
+| `make down`           | Stop/remove containers          |
+| `make makemigrations` | Create migrations               |
+| `make migrate`        | Apply migrations                |
+| `make exampledata`    | Seed example users + data       |
+| `make test`           | Run tests inside Docker         |
+| `make coverage`       | Run tests with coverage         |
+| `make collectstatic`  | Collect static files            |
+| `make flush`          | Wipe all DB data                |
+| `make shell`          | Open Django shell inside Docker |
 
-## How to Use
+---
 
-Instead of typing long `docker-compose exec` commands, just run:
+# ⚙️ **Setup & Development**
+
+### 1. Clone the repository
 
 ```bash
+git clone https://github.com/IsaacPatrickson/Client-Request-Tracker.git
+cd Client-Request-Tracker
+```
+
+### 2. Build the Docker environment
+
+```bash
+make build
+```
+
+### 3. Start the development server
+
+```bash
+make up
+```
+
+### 4. Apply migrations & load seed data
+
+```bash
+make makemigrations
 make migrate
-make test
+make exampledata
+```
+
+### 5. Collect static files
+
+```bash
 make collectstatic
-make flush
 ```
-and so on.
 
-## Setup & Development
+Access the app at:
+**[http://localhost:8000](http://localhost:8000)**
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/sea-web-app.git
-   cd sea-web-app
-   ```
+---
 
-2. Build the Docker image:
-   ```bash
-   make build
-   ```
+# 🗄 **Management Commands**
 
-3. Start the development environment:
-   ```bash
-   make up
-   ```
+### Wipe the database
 
-4. Apply migrations, create users and seed data:
-   ```bash
-   make makemigrations
-   make migrate
-   make exampledata
-   ```
-
-5. Collect static files (for local testing):
-   ```bash
-   make collectstatic
-   ```
-
-6. Access the app locally at http://localhost:8000
-
-
-## Management Commands
-
-### Wipe Database
-Remove all data from all models (including users):
-
-```bash
-docker-compose exec web python manage.py wipe_data
-```
-or
 ```bash
 make flush
 ```
 
-### Seed Example Data
-Seed all models with example data:
+### Seed example data
+
 ```bash
 make exampledata
 ```
 
-## Testing
-Run the test suite with pytest inside the Docker container:
+---
+
+# 🧪 **Testing**
+
+Run the full pytest suite:
+
 ```bash
 make test
 ```
 
-Run tests with coverage report:
+Run with coverage:
+
 ```bash
 make coverage
 ```
 
-Generate HTML coverage report:
+Generate an HTML report:
+
 ```bash
 docker-compose exec web pytest --cov=main --cov-report=html
 ```
 
+The test suite includes:
 
-## Deployment
+* Form validation tests
+* Registration tests
+* Authentication and permission tests
+* Model behaviour
+* Dashboard and CRUD behaviour
 
-This project uses Render for hosting in production.
+All TDD details and screenshots are included in the write-up.
 
-### Production Checklist
 
-- Switch `psycopg2-binary` to `psycopg2` in your `requirements.txt` before deploying.
+---
 
-- Run `collectstatic` on Render or as part of the deployment script:
+# 🚀 Deployment (Render – Previously Hosted)
+
+This application was deployed to a live production environment using **Render**, running inside a Docker container with a managed **PostgreSQL** database.
+
+Although the live deployment is no longer active, the setup and configuration demonstrate the full production workflow:
+
+### Deployment Workflow
+
+1. Updated `requirements.txt` for production (`psycopg2` instead of `psycopg2-binary`)
+2. Configured environment variables in Render (secrets, DB URL, debug mode)
+3. Ran migrations against the hosted PostgreSQL instance
+4. Collected static files:
 
 ```bash
 python manage.py collectstatic --noinput
 ```
 
+5. Built and deployed through Render’s Docker environment
+6. Served the application using **Gunicorn** and **WhiteNoise**
 
-## User Manual
+This setup reflects a real-world Django deployment pipeline with containerisation and cloud hosting.
 
-Assistive screenshots are in the Appendicies of Isaac Patrickson's Final submission point: Software Engineering and Agile end-of-module assessment
+---
 
-### Register Journey (Appendix D)
-1. On the homepage, the user presses the register button.
-2. The user enters their details which match the requirements for each field and presses the register button.
-3. The fields are wiped and a success message is displayed showing the user they have successfully registered.
+# 📘 **User Manual (Simplified)**
 
-See the limited permissions user login journey to continue to the dashboard.
+Screenshots are included in the write-up and original appendices inside `/docs`.
 
-### Limited User Login Journey (Appendix E)
-1. On the homepage, the user presses the login button.
-2. The user is taken to the login page. Valid limited user credentials are entered and the user logs in.
-3. The limited user is greeted with the dashboard screen which shows a limited list of tables and a list of recent changes made by the user.
+### Registration
 
-### Admin User Login Journey (Appendix G)
-1. On the homepage, the user presses the login button.
-2. The user is taken to the login page. Valid admin credentials are entered and the user logs in.
-3. The admin user is greeted with the dashboard screen which shows all tables and a list of recent changes made by the user.
+1. Click **Register**
+2. Enter required fields
+3. Success message appears
 
-### Logout Journey (Appendix H)
-1. Once in the dashboard, any user can logout by pressing the logout button.
-2. Once the logout button is pressed, the user is presented with a success message confirming that they have successfully logged out. They are given the option to return to the login page.
-3. Upon clicking the button to log in again, the user is taken to the custom login page.
+### Limited User Login
 
-### Create, Read, Update and Delete Actions (Appendix E; Appendix G)
-1. An admin/limited user has pressed the Client Requests button to view the client requests table (READ).
-2. An admin/limited user has pressed the add button to add a new client request (CREATE).
-3. An admin/limited user has clicked on the id of a record and they are taken to the view for changing the details of a client request (UPDATE).
-4. An admin user has pressed the delete button when updating a record which takes them to the deletion confirmation page (DELETE).
+* View dashboard with limited tables
+* Can create/edit requests
+* Cannot delete
+
+### Admin Login
+
+* Full CRUD access for all models
+* Admin dashboard view
+
+### Logout
+
+* Logout button → success message → redirect to login page
+
+### CRUD Actions
+
+* **READ**: View list of client requests
+* **CREATE**: Add new client request
+* **UPDATE**: Edit existing request
+* **DELETE**: Admin-only
+
+---
+
+# 📄 **Full Technical Write-Up**
+
+Architecture, Agile methods, TDD, sprint boards, ERDs, appendices, user journeys and screenshots are documented in:
+
+👉 **`/docs/Client_Request_Tracker_WriteUp.docx`**
+
+
+---
+
+# 👤 **Author**
+
+**Isaac Patrickson**
+Software Engineering & Agile – Final Project
+Level 6 Digital Technology Solutions Degree Apprentice
+
+GitHub: [https://github.com/IsaacPatrickson](https://github.com/IsaacPatrickson)
+Email: **[isaacspatrickson@gmail.com](mailto:isaacspatrickson@gmail.com)**
