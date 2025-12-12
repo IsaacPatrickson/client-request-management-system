@@ -30,7 +30,10 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'  # convert string to bool
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
-CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS_URL')
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    'CSRF_TRUSTED_ORIGINS_URL',
+    ''
+).split(',')
 
 
 # Application definition
