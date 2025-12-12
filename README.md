@@ -216,27 +216,109 @@ All TDD details and screenshots are included in the write-up.
 
 ---
 
-## 🚀 Deployment (Render – Previously Hosted)
+## 🚀 Deployment (Render – Production Setup)
 
-This application was deployed to a live production environment using **Render**, running inside a Docker container with a managed **PostgreSQL** database.
+This application was deployed to a live production environment using **Render**, backed by a **managed PostgreSQL database**.
 
-Although the live deployment is no longer active, the setup and configuration demonstrate the full production workflow:
+Although the live deployment may not always be active, the configuration and workflow demonstrate a **real-world Django production deployment**, including cloud hosting, environment-based configuration, and database management.
 
-### Deployment Workflow
+## Deployment Architecture Overview
 
-1. Updated `requirements.txt` for production (`psycopg2` instead of `psycopg2-binary`)
-2. Configured environment variables in Render (secrets, DB URL, debug mode)
-3. Ran migrations against the hosted PostgreSQL instance
-4. Collected static files:
+* **Hosting platform:** Render
+* **Backend framework:** Django
+* **Database:** Managed PostgreSQL (Render)
+* **Application server:** Gunicorn
+* **Static file serving:** WhiteNoise
+* **Secrets & configuration:** Environment variables
+* **Containerisation:** Docker (previous deployment)
 
-```bash
-python manage.py collectstatic --noinput
+Production-specific considerations included:
+
+* Using `psycopg2` instead of `psycopg2-binary`
+* Running database migrations against a hosted PostgreSQL instance
+* Collecting and serving static files
+* Disabling debug mode in production
+
+This setup reflects a **real-world Django deployment pipeline** rather than a development-only configuration.
+
+## Step-by-Step Deployment on Render
+
+### 1️⃣ Create the PostgreSQL Database
+
+1. Create a **PostgreSQL** database in Render.
+2. Assign it to a **Project**.
+3. Choose a **region**.
+4. Ensure the database and web service use the **same region** (recommended).
+
+### 2️⃣ Create the Web Service
+
+1. Create a new **Web Service** in Render.
+2. Connect it to this GitHub repository.
+3. Set the region to match the PostgreSQL database.
+4. Allow Render to build and deploy the service.
+
+### 3️⃣ Configure Environment Variables
+
+In the Render Web Service settings, add the following:
+
+```text
+ALLOWED_HOSTS=client-request-management-system.onrender.com
+CSRF_TRUSTED_ORIGINS_URL=https://client-request-management-system.onrender.com
+DATABASE_URL=<PostgreSQL database URL>
+DEBUG=False
+DJANGO_ENV=production
+DJANGO_SECRET_KEY=<generated secret key>
 ```
 
-5. Built and deployed through Render’s Docker environment
-6. Served the application using **Gunicorn** and **WhiteNoise**
+Generate a secret key using:
 
-This setup reflects a real-world Django deployment pipeline with containerisation and cloud hosting.
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(50))"
+```
+
+### 4️⃣ Initial Deployment
+
+Once environment variables are set, Render will automatically build and deploy the application using:
+
+* Gunicorn as the application server
+* WhiteNoise for static file handling
+
+### 5️⃣ Database Migration & Data Seeding (Paid Render Tier)
+
+Access the **Render Shell** and run:
+
+```bash
+python manage.py migrate
+python manage.py create_limited_user_group
+python manage.py seed_users
+python manage.py seed_generic_data
+python manage.py seed_client_data
+```
+
+### 6️⃣ Wiping Seeded Data (Development Only)
+
+To remove all records from the core tables:
+
+```bash
+python manage.py wipe_data
+```
+
+⚠️ This command is destructive and should only be used in development or testing environments.
+
+### 7️⃣ Seeded User Credentials
+
+Seeded credentials are defined in:
+
+```
+main/management/commands/seed_users.py
+```
+
+Example:
+
+```text
+Username: superadmin
+Password: superpass123
+```
 
 ---
 
